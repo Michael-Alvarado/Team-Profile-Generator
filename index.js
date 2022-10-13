@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Employee = require('./lib/Employee.js');
 const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
 const Manager = require('./lib/Manager.js');
@@ -175,47 +174,7 @@ const internQuestions = [
     }
 ];
 
-const employeeQuestions = [
-    {
-        type: 'input',
-        name: 'Employee_name',
-        message: "What is the employee's name?",
-        validate: inputEl => {
-            if(inputEl) {
-                return true;
-            } else {
-                console.log('A title is required to continue.');
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'Employee_ID',
-        message: "What is the employee's ID?",
-        validate: inputEl => {
-            if(inputEl) {
-                return true;
-            } else {
-                console.log('A title is required to continue.');
-                return false;
-            }
-        }
-    },
-    {
-        type: 'input',
-        name: 'Employee_email',
-        message: "What is the employee's email?",
-        validate: inputEl => {
-            if(inputEl) {
-                return true;
-            } else {
-                console.log('A title is required to continue.');
-                return false;
-            }
-        }
-    }
-];
+
 
 function init() {
     createManager();
@@ -227,7 +186,7 @@ function fillRoster() {
             type: 'list',
             name: 'answer',
             message: 'Would you like to add more team members?',
-            choices: ['Engineer', 'Intern', 'Generic employee', 'No more members'],
+            choices: ['Engineer', 'Intern', 'No more members'],
         },
     ]).then(userInput => {
         switch(userInput.answer) {
@@ -237,14 +196,11 @@ function fillRoster() {
             case 'Intern':
                 createIntern();
                 break;
-            case 'Generic employee':
-                createEmployee(); 
-                break;
-            case 'No more members':
+            default:
                 for(var i=0; i<roster.length; i++) {
                     cards.push(generateCard(roster[i]));
                 };
-                generateHTML(cards.join(''));
+                writeToFile('index.html', generateHTML(cards.join('')));
         }
     });
 }
@@ -255,8 +211,9 @@ function createManager() {
         console.log(data);
         const manager = new Manager(data.Manager_name, data.Manager_ID, data.Manager_email, data.Manager_office);
         roster.push(manager);
-    })
-    fillRoster();
+    }).then(placeholder => {
+        fillRoster();
+    });
 }
 
 function createEngineer() {
@@ -265,8 +222,9 @@ function createEngineer() {
         console.log(data);
         const engineer = new Engineer(data.Engineer_name, data.Engineer_ID, data.Engineer_email, data.github);
         roster.push(engineer);
-    })
-    fillRoster();
+    }).then(placeholder => {
+        fillRoster();
+    });
 }
 
 function createIntern() {
@@ -275,18 +233,9 @@ function createIntern() {
         console.log(data);
         const intern = new Intern(data.Intern_name, data.Intern_ID, data.Intern_email, data.school);
         roster.push(intern);
+    }).then(placeholder => {
+        fillRoster();
     })
-    fillRoster();
-}
-
-function createEmployee() {
-    console.log("Enter the employee's information:");
-    inquirer.prompt(employeeQuestions).then(data => {
-        console.log(data);
-        const employee = new Employee(data.Employee_name, data.Employee_ID, data.Employee_email);
-        roster.push(employee);
-    })
-    fillRoster();
 }
 
 function writeToFile(fileName, data) {
