@@ -7,10 +7,11 @@ function generateCard(person) {
     var name = person.getName();
     var id = person.getId();
     var email = person.getEmail();
+    var role = person.getRole();
     let variant;
 
     if(person.getRole() === 'Engineer') {
-        variant = `<h4>GitHub URL: <a href="${person.getGithub()}">${person.getGithub()}</a></h4>`;
+        variant = `<h4>GitHub URL: <a href="${person.getGithub()}" target="_blank" rel="noreferrer noopener">${person.getGithub()}</a></h4>`;
     } else if (person.getRole() === 'Intern') {
         variant = `<h4>School: ${person.getSchool()}</h4>`;
     } else if (person.getRole() === 'Manager') {

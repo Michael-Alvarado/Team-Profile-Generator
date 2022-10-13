@@ -1,3 +1,4 @@
+// Setting required files
 const inquirer = require('inquirer');
 const fs = require('fs');
 const Engineer = require('./lib/Engineer.js');
@@ -6,9 +7,11 @@ const Manager = require('./lib/Manager.js');
 const generateHTML = require('./utils/generateHTML');
 const generateCard = require('./utils/generateCard');
 
+// Creating arrays to be used later
 const roster = [];
 const cards = [];
 
+// Array of questions to be asked for Manager
 const managerQuestions = [
     {
         type: 'input',
@@ -64,6 +67,7 @@ const managerQuestions = [
     }
 ];
 
+// Array of questions to be asked for Engineer
 const engineerQuestions = [
     {
         type: 'input',
@@ -119,6 +123,7 @@ const engineerQuestions = [
     }
 ];
 
+// Array of questions to be asked for Intern
 const internQuestions = [
     {
         type: 'input',
@@ -175,11 +180,12 @@ const internQuestions = [
 ];
 
 
-
+// Function to get program rolling
 function init() {
     createManager();
 }
 
+// Function to prompt for additional team members
 function fillRoster() {
     inquirer.prompt([
         {
@@ -205,6 +211,7 @@ function fillRoster() {
     });
 }
 
+// Function to create Manager from inputs
 function createManager() {
     console.log("Enter the manager's information:");
     inquirer.prompt(managerQuestions).then(data => {
@@ -216,6 +223,7 @@ function createManager() {
     });
 }
 
+// Function to create Engineer from inputs
 function createEngineer() {
     console.log("Enter the engineer's information:");
     inquirer.prompt(engineerQuestions).then(data => {
@@ -227,6 +235,7 @@ function createEngineer() {
     });
 }
 
+// Function to create Intern from inputs
 function createIntern() {
     console.log("Enter the intern's information:");
     inquirer.prompt(internQuestions).then(data => {
@@ -238,6 +247,7 @@ function createIntern() {
     })
 }
 
+// Function to create the index.html file and copy the style.css file
 function writeToFile(fileName, data) {
     fs.writeFile(`./dist/${fileName}`, data, err => {
         if(err) {
@@ -245,6 +255,13 @@ function writeToFile(fileName, data) {
         }
         console.log('File created successfully!');
     });
+    fs.copyFile('./src/style.css','./dist/style.css', (err) => {
+        if(err) {
+            return console.log(err);
+        }
+        console.log('Stylesheet successfully created!');
+    })
 }
 
+// Initializing the program
 init();
